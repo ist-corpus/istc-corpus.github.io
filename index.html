@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>冰雪旅游专题语料库</title>
+    <style>
+        /* 全局样式（模仿 BCC 风格） */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft Yahei", "PingFang SC", sans-serif;
+        }
+
+        body {
+            background-color: #ffffff;
+            color: #333333;
+            line-height: 1.6;
+        }
+
+        /* 顶部提示栏 */
+        .top-notice {
+            background-color: #f0f7ff;
+            color: #165dff;
+            padding: 12px 20px;
+            font-size: 14px;
+            border-bottom: 1px solid #d0e8ff;
+        }
+
+        /* 头部信息 */
+        .header {
+            text-align: center;
+            padding: 30px 20px;
+            background-color: #ffffff;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            color: #165dff;
+            margin-bottom: 8px;
+        }
+
+        .header .contact {
+            font-size: 14px;
+            color: #666666;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        /* 模块标签栏 */
+        .tab-nav {
+            display: flex;
+            justify-content: center;
+            background-color: #f5f7fa;
+            border-bottom: 1px solid #e5e6eb;
+            padding: 0 20px;
+            margin-bottom: 30px;
+        }
+
+        .tab-btn {
+            padding: 12px 24px;
+            font-size: 16px;
+            color: #666666;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            color: #165dff;
+            border-bottom-color: #165dff;
+            font-weight: 500;
+        }
+
+        .tab-btn:hover {
+            color: #165dff;
+        }
+
+        /* 内容展示区域 */
+        .content-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section-content {
+            height: 0;
+            overflow: hidden;
+            background-color: #f9fafc;
+            border: 2px solid #e5e6eb;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(22, 93, 255, 0.05);
+            margin-bottom: 20px;
+            transition: height 0.4s ease;
+            position: relative;
+        }
+
+        .section-content::before {
+            content: "";
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            right: 4px;
+            bottom: 4px;
+            border: 1px solid #d0e8ff;
+            border-radius: 4px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .section-content.active::before {
+            opacity: 1;
+        }
+
+        .section-content.active {
+            height: 50vh;
+            padding: 20px;
+            overflow-y: auto;
+            box-shadow: 0 4px 12px rgba(22, 93, 255, 0.1);
+        }
+
+        /* 内容项样式 */
+        .content-item {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e5e6eb;
+        }
+
+        .content-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .content-item h3 {
+            font-size: 18px;
+            color: #165dff;
+            margin-bottom: 6px;
+        }
+
+        .content-item p {
+            font-size: 14px;
+            color: #333333;
+            margin-bottom: 15px;
+        }
+
+        /* 查看语料按钮样式 */
+        .view-btn {
+            background-color: #165dff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: background-color 0.3s ease;
+            margin-bottom: 15px;
+        }
+
+        .view-btn:hover {
+            background-color: #0e48d8;
+        }
+
+        /* 文件列表样式 */
+        .file-list {
+            display: none;
+            margin-left: 10px;
+            padding: 15px;
+            background-color: #ffffff;
+            border-radius: 6px;
+            border: 1px solid #d0e8ff;
+            margin-bottom: 20px;
+        }
+
+        .file-list.show {
+            display: block;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 10px;
+            border-bottom: 1px solid #f0f7ff;
+            font-size: 14px;
+        }
+
+        .file-item:last-child {
+            border-bottom: none;
+        }
+
+        .file-item a {
+            color: #165dff;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .file-item a:hover {
+            text-decoration: underline;
+        }
+
+        /* 底部卡片 */
+        .footer-cards {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background-color: #f9fafc;
+            border: 1px solid #e5e6eb;
+            border-radius: 4px;
+            padding: 20px;
+        }
+
+        .card h4 {
+            font-size: 16px;
+            color: #165dff;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card p {
+            font-size: 13px;
+            color: #666666;
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            .tab-nav {
+                overflow-x: auto;
+                justify-content: flex-start;
+            }
+            .section-content.active {
+                height: 70vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部提示栏 -->
+    <div class="top-notice">
+        Ice-Snow Tourism Corpus 冰雪旅游专题语料库
+    </div>
+
+    <!-- 头部信息 -->
+    <div class="header">
+        <h1>冰雪旅游专题语料库</h1>
+        <div class="contact">
+            <span>📱 建设者</span>
+            <span>📧 浙江外国语学院</span>
+            <span>📍 浙江省杭州市</span>
+            <span>🌐 github.com/zhangsan</span>
+        </div>
+    </div>
+
+    <!-- 模块标签栏 -->
+    <div class="tab-nav">
+        <button class="tab-btn active" onclick="showSection('gov')">政府公文</button>
+        <button class="tab-btn" onclick="showSection('official')">官推语料</button>
+        <button class="tab-btn" onclick="showSection('social')">社媒语料</button>
+    </div>
+
+    <!-- 内容容器 -->
+    <div class="content-container">
+        <!-- 政府公文 -->
+        <div class="section-content active" id="gov">
+            <p>语料说明：从中华人民共和国国家发展和改革委员会信息网站、中国政府网、黑龙江政务服务网等国家和地方的政府官方网站收集。</p>
+            
+            <!-- 查看语料按钮 -->
+            <button class="view-btn" onclick="toggleFileList('govFiles')">
+                📄 查看政府公文语料
+            </button>
+            
+            <!-- 文件列表（默认隐藏） -->
+            <div class="file-list" id="govFiles">
+                <div class="file-item">
+                    <a href="政府公文.txt" target="_blank">政府公文语料.txt</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 官推语料 -->
+        <div class="section-content" id="official">
+            <div class="content-item">
+                <h3>文旅宣传</h3>
+                <p>语料说明：文化和旅游部官网、文旅中国等国家权威平台和地方文旅网站收集。</p>
+                
+                <!-- 查看语料按钮 -->
+                <button class="view-btn" onclick="toggleFileList('cultureFiles')">
+                    📄 查看文旅宣传语料
+                </button>
+                
+                <!-- 文件列表（默认隐藏） -->
+                <div class="file-list" id="cultureFiles">
+                    <div class="file-item">
+                        <a href="文旅宣传.txt" target="_blank">文旅宣传语料.txt</a>
+                    </div>
+                </div>
+            </div>
+            <div class="content-item">
+                <h3>媒体报道</h3>
+                <p>语料说明：收集新华社、央视网、光明网等权威媒体关于冰雪旅游的报道。</p>
+                
+                <!-- 查看语料按钮 -->
+                <button class="view-btn" onclick="toggleFileList('mediaFiles')">
+                    📄 查看媒体报道语料
+                </button>
+                
+                <!-- 文件列表（默认隐藏） -->
+                <div class="file-list" id="mediaFiles">
+                    <div class="file-item">
+                        <a href="媒体报道.txt" target="_blank">媒体报道语料.txt</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 社媒语料 -->
+        <div class="section-content" id="social">
+            <div class="content-item">
+                <h3>小红书平台语料</h3>
+                <p>语料说明：从热门社交平台小红书中，利用爬虫工具根据关键词收集相关帖子及图片视频资料，经过人工筛选保留与冰雪旅游等关键词关联性强的语料。</p>
+                
+                <!-- 查看语料按钮 -->
+                <button class="view-btn" onclick="toggleFileList('socialFiles')">
+                    📄 查看社媒语料
+                </button>
+                
+                <!-- 文件列表（默认隐藏） -->
+                <div class="file-list" id="socialFiles">
+                    <div class="file-item">
+                        <a href="社媒语料.txt" target="_blank">社媒语料.txt</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 底部卡片 -->
+        <div class="footer-cards">
+            <div class="card">
+                <h4>🌐 联系我</h4>
+                <p>邮箱：zhangsan@example.com | 电话：13800138000 | GitHub：github.com/zhangsan</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 当前激活的模块 ID
+        let currentSection = 'gov';
+
+        // 切换模块显示
+        function showSection(sectionId) {
+            // 隐藏所有内容
+            const allContents = document.querySelectorAll('.section-content');
+            allContents.forEach(content => content.classList.remove('active'));
+
+            // 重置所有标签样式
+            const allTabs = document.querySelectorAll('.tab-btn');
+            allTabs.forEach(tab => tab.classList.remove('active'));
+
+            // 显示目标内容
+            const targetContent = document.getElementById(sectionId);
+            targetContent.classList.add('active');
+
+            // 激活目标标签
+            const targetTab = document.querySelector(`.tab-btn[onclick="showSection('${sectionId}')"]`);
+            targetTab.classList.add('active');
+
+            // 更新当前激活模块
+            currentSection = sectionId;
+        }
+
+        // 切换文件列表显示/隐藏
+        function toggleFileList(fileListId) {
+            const fileList = document.getElementById(fileListId);
+            fileList.classList.toggle('show');
+            
+            // 切换按钮文字
+            const btn = fileList.previousElementSibling;
+            if (fileList.classList.contains('show')) {
+                btn.textContent = '📄 收起语料列表';
+            } else {
+                if (fileListId === 'govFiles') {
+                    btn.textContent = '📄 查看政府公文语料';
+                } else if (fileListId === 'cultureFiles') {
+                    btn.textContent = '📄 查看文旅宣传语料';
+                } else if (fileListId === 'mediaFiles') {
+                    btn.textContent = '📄 查看媒体报道语料';
+                } else if (fileListId === 'socialFiles') {
+                    btn.textContent = '📄 查看社媒语料';
+                }
+            }
+        }
+    </script>
+</body>
+</html>
