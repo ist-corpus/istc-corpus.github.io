@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小红书多模态语料库</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+
+        body {
+            background: #f7f8fa;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 30px;
+            color: #165dff;
+        }
+
+        /* 帖子卡片 */
+        .post-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .post-note-id {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 8px;
+        }
+
+        .post-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .post-desc {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #444;
+            margin-bottom: 12px;
+            white-space: pre-line;
+        }
+
+        /* 标签 */
+        .post-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 14px;
+        }
+
+        .tag {
+            background: #eaf2ff;
+            color: #165dff;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        /* 媒体区域 */
+        .post-media {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .post-media img,
+        .post-media video {
+            width: 100%;
+            border-radius: 12px;
+            object-fit: cover;
+            max-height: 400px;
+        }
+
+        .post-video {
+            position: relative;
+        }
+
+        /* 空状态 */
+        .no-media {
+            color: #aaa;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2 class="page-title">小红书多模态语料库（图文+视频）</h2>
+        <div id="postList"></div>
+    </div>
+
+    <script>
+        // 自动读取你整理好的配对数据
+        fetch('./posts/paired_posts.json')
+            .then(res => res.json())
+            .then(posts => {
+                let html = '';
+
+                posts.forEach(post => {
+                    const { note_id, title, desc, images, video } = post;
+
+                    // 提取标签（从 #xxx 格式）
+                    const tags = (desc || "").match(/#[^#\s]+/g) || [];
+
+                    html += `
+                    <div class="post-card">
+                        <div class="post-note-id">ID：${note_id}</div>
+                        <div class="post-title">${title || "无标题"}</div>
+                        <div class="post-desc">${desc || "无描述"}</div>
+
+                        <div class="post-tags">
+                            ${tags.map(t => `<span class="tag">${t}</span>`).join('')}
+                        </div>
+
+                        <div class="post-media">
+                    `;
+
+                    // 显示图片
+                    if (images && images.length > 0) {
+                        images.forEach(img => {
+                            html += `<img src="./posts/${note_id}/${img}" alt="图片">`;
+                        });
+                    }
+
+                    // 显示视频
+                    if (video) {
+                        html += `
+                        <video controls src="./posts/${note_id}/${video}"></video>
+                        `;
+                    }
+
+                    // 无媒体
+                    if ((!images || images.length === 0) && !video) {
+                        html += `<div class="no-media">纯文字内容</div>`;
+                    }
+
+                    html += `
+                        </div>
+                    </div>
+                    `;
+                });
+
+                document.getElementById('postList').innerHTML = html;
+            })
+    </script>
+</body>
+</html>
