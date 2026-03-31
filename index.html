@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>冰雪旅游专题语料库</title>
     <style>
-        /* 全局样式 */
         * {
             margin: 0;
             padding: 0;
@@ -19,7 +18,6 @@
             line-height: 1.6;
         }
 
-        /* 顶部提示栏 */
         .top-notice {
             background-color: #f0f7ff;
             color: #165dff;
@@ -29,7 +27,6 @@
             text-align: center;
         }
 
-        /* 头部信息 */
         .header {
             text-align: center;
             padding: 30px 20px;
@@ -52,7 +49,6 @@
             align-items: center;
         }
 
-        /* 模块标签栏 */
         .tab-nav {
             display: flex;
             justify-content: center;
@@ -88,7 +84,6 @@
             background-color: rgba(22, 93, 255, 0.05);
         }
 
-        /* 内容展示区域 */
         .content-container {
             max-width: 1200px;
             margin: 0 auto;
@@ -109,7 +104,6 @@
             display: block;
         }
 
-        /* 内容项样式 */
         .content-item {
             margin-bottom: 20px;
             padding-bottom: 20px;
@@ -135,7 +129,6 @@
             line-height: 1.8;
         }
 
-        /* 查看语料按钮样式 */
         .view-btn {
             background-color: #165dff;
             color: white;
@@ -151,7 +144,6 @@
             background-color: #0e48d8;
         }
 
-        /* 底部卡片 */
         .footer-cards {
             max-width: 1200px;
             margin: 40px auto;
@@ -183,12 +175,10 @@
 </head>
 
 <body>
-    <!-- 顶部小字（原样恢复） -->
     <div class="top-notice">
         Ice-Snow Tourism Corpus 冰雪旅游专题语料库
     </div>
 
-    <!-- 头部信息（原样恢复） -->
     <div class="header">
         <h1>冰雪旅游专题语料库</h1>
         <div class="contact">
@@ -199,7 +189,6 @@
         </div>
     </div>
 
-    <!-- 三个标签按钮：全部可点！原样恢复！ -->
     <div class="tab-nav">
         <button class="tab-btn active" onclick="show('social')">社媒语料</button>
         <button class="tab-btn" onclick="show('official')">官推语料</button>
@@ -207,17 +196,16 @@
     </div>
 
     <div class="content-container">
-        <!-- 社媒语料 → 按钮跳转至语料展示网页 -->
         <div class="section-content active" id="social">
             <div class="content-item">
                 <h3>小红书平台语料</h3>
                 <p>语料说明：从热门社交平台小红书中，利用爬虫工具根据关键词收集相关帖子及图片视频资料，经过人工筛选保留与冰雪旅游等关键词关联性强的语料。</p>
-                <!-- 按钮跳转至社媒语料展示页面，确保文件名和路径正确 -->
-                <button class="view-btn" onclick="window.open('social_media_posts.html', '_blank')">查看社媒语料</button>
+                
+                <!-- 🔥 这里已经改成正确链接！ -->
+                <button class="view-btn" onclick="window.open('xiaohongshu_slider_final.html', '_blank')">查看社媒语料</button>
             </div>
         </div>
 
-        <!-- 官推语料 → 原样恢复，可点 -->
         <div class="section-content" id="official">
             <div class="content-item">
                 <h3>文旅宣传</h3>
@@ -231,7 +219,6 @@
             </div>
         </div>
 
-        <!-- 政府公文 → 原样恢复，可点 -->
         <div class="section-content" id="gov">
             <div class="content-item">
                 <h3>政府公文语料</h3>
@@ -240,7 +227,6 @@
             </div>
         </div>
 
-        <!-- 底部卡片（原样全部恢复） -->
         <div class="footer-cards">
             <div class="card">
                 <h4>🌐 联系我们</h4>
@@ -259,17 +245,13 @@
     </div>
 
     <script>
-        // 切换标签功能（全部正常可用）
         function show(id) {
-            // 隐藏全部
             document.querySelectorAll('.section-content').forEach(el => {
                 el.classList.remove('active');
             });
-            // 取消全部激活
             document.querySelectorAll('.tab-btn').forEach(el => {
                 el.classList.remove('active');
             });
-            // 显示当前
             document.getElementById(id).classList.add('active');
             document.querySelector(`.tab-btn[onclick="show('${id}')"]`).classList.add('active');
         }
